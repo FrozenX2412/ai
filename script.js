@@ -271,3 +271,228 @@ function loadTetris() {
             return;
         }
         const deltaTime = time - lastTime;
+        lastTime = time;
+
+        dropCounter += deltaTime;
+
+        if(dropCounter > dropInterval) {
+            const pos = {...current.pos};
+            pos.y++;
+            if(!collide(board, current.shape, pos)) {
+                current.pos = pos;
+            } else {
+                merge(board, current.shape, current.pos, current.color);
+                clearRows();
+
+                current = {
+                    pos: {x: 3, y: 0},
+                    shape: tetrominoes[Math.floor(Math.random() * tetrominoes.length)],
+                    color: ''
+                };
+                current.color = colors[tetrominoes.indexOf(current.shape)];
+
+                if(collide(board, current.shape, current.pos)) {
+                    gameOver = true;
+                }
+            }
+
+            dropCounter = 0;
+        }
+        drawGame();
+        requestAnimationFrame(update);
+    }
+
+    resetGame();
+    update();
+}
+
+// --------- SNAKE ---------
+
+function loadSnake() {
+    const blockSize = 20;
+    const width = 400;
+    const height = 400;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.backgroundColor = '#111';
+    gameContainer.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+
+    let snake = [
+        {x: 9, y: 9},
+    ];
+    let direction = {x: 0, y: 0};
+    let food = {};
+    let score = 0;
+    let gameOver = false;
+    let speed = 150; // ms interval
+    let lastPaintTime = 0;
+
+    function drawBlock(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x * blockSize, y * blockSize, blockSize - 1, blockSize -1);
+    }
+
+    function placeFood() {
+        food = {
+            x: Math.floor(Math.random() * (width / blockSize)),
+            y: Math.floor(Math.random() * (height / blockSize)),
+        };
+
+        // Avoid food inside snake
+        while(snake.some(s => s.x === food.x && s.y === food.y)) {
+            food = {
+                x: Math.floor(Math.random() * (width / blockSize)),
+                y: Math.floor(Math.random() * (height / blockSize)),
+            };
+        }
+    }
+
+    function resetGame() {
+        snake = [{x: 9, y: 9}];
+        direction = {x: 0, y: 0};
+        score = 0;
+        gameOver = false;
+        placeFood();
+    }
+
+    document.addEventListener('keydown', e => {
+        if(gameOver) return;
+        switch(e.key) {
+            case 'ArrowUp':
+                if(direction.y !== 1) direction = {x: 0, y: -1};
+                break;
+            case 'ArrowDown':
+                if(direction.y !== -1) direction = {x: 0, y: 1};
+                break;
+            case 'ArrowLeft':
+                if(direction.x !== 1) direction = {x: -1, y: 0};
+                break;
+            case 'ArrowRight':
+                if(direction.x !== -1) direction = {x: 1, y: 0};
+                break;
+        }
+    });
+
+    function draw() {
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, width, height);
+
+        snake.forEach((segment, index) => {
+            drawBlock(segment.x, segment.y, index === 0 ? '#67e8f9' : '#1f78b4');
+        });
+
+        drawBlock(food.x, food.y, '#ef4444');
+
+        ctx.fillStyle = '#eee';
+        ctx.font = '20px monospace';
+        ctx.fillText(`Score: ${score}`, 10, 25);
+    }
+
+    function update(time=0){
+        if(gameOver) {
+            ctx.fillStyle = 'red';
+            ctx.font = '40px monospace';
+            ctx.fillText('Game Over! Press any arrow key to restart.', 10, height/2);
+            return;
+        }
+
+        if(!lastPaintTime) lastPaintTime = time;
+        const secondsSinceLastPaint = (time - lastPaintTime);
+
+        if(secondsSinceLastPaint < speed) {
+            requestAnimationFrame(update);
+            return;
+        }
+
+        lastPaintTime = time;
+
+        // Move snake
+        if(direction.x !== 0 || direction.y !== 0) {
+            let newHead = {
+                x: snake[0].x + direction.x,
+                y: snake[0].y + direction.y
+            };
+
+            // Check collisions
+            if(newHead.x < 0 || newHead.x >= width/blockSize ||
+                newHead.y < 0 || newHead.y >= height/blockSize ||
+                snake.some(s => s.x === newHead.x && s.y === newHead.y)) {
+                gameOver = true;
+                requestAnimationFrame(update);
+                return;
+            }
+
+            snake.unshift(newHead);
+
+            // Check if eat food
+            if(newHead.x === food.x && newHead.y === food.y) {
+                score++;
+                placeFood();
+                if(speed > 50) speed -= 5;
+            } else {
+                snake.pop();
+            }
+        }
+
+        draw();
+        requestAnimationFrame(update);
+    }
+
+    resetGame();
+    update();
+}
+
+// --------- ROCK PAPER SCISSORS ---------
+
+function loadRPS() {
+    const container = document.createElement('div');
+    container.classList.add('rps-container');
+    container.style.color = '#eee';
+    container.style.textAlign = 'center';
+
+    container.innerHTML = `
+        <h3>Rock, Paper, Scissors</h3>
+        <p>Choose your move:</p>
+        <div class="rps-buttons">
+            <button data-move="rock">🪨 Rock</button>
+            <button data-move="paper">📄 Paper</button>
+            <button data-move="scissors">✂️ Scissors</button>
+        </div>
+        <div id="rps-result" style="margin-top:20px; font-size: 1.25rem;"></div>
+    `;
+
+    gameContainer.appendChild(container);
+
+    const buttons = container.querySelectorAll('button');
+    const resultDiv = container.querySelector('#rps-result');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const playerMove = btn.dataset.move;
+            const moves = ['rock', 'paper', 'scissors'];
+            const computerMove = moves[Math.floor(Math.random() * moves.length)];
+
+            const winner = decideWinner(playerMove, computerMove);
+            resultDiv.innerHTML = `
+                You chose <strong>${playerMove}</strong>. Computer chose <strong>${computerMove}</strong>.<br />
+                <strong>${winner}</strong>
+            `;
+        });
+    });
+
+    function decideWinner(player, computer) {
+        if(player === computer) return "It's a draw!";
+        if(
+            (player === 'rock' && computer === 'scissors') ||
+            (player === 'paper' && computer === 'rock') ||
+            (player === 'scissors' && computer === 'paper')
+        ){
+            return 'You win!';
+        }
+        return 'You lose!';
+    }
+}
