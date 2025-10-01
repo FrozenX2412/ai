@@ -1,0 +1,228 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #eee;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Container */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Navigation */
+.header {
+    background: #1f1f1f;
+    padding: 0.5rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.nav-logo {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #67e8f9;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.25rem;
+    list-style: none;
+}
+
+.nav-link {
+    font-weight: 600;
+    color: #ccc;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: #67e8f9;
+    color: #121212;
+}
+
+.nav-toggle {
+    display: none;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: #67e8f9;
+    cursor: pointer;
+}
+
+/* Sections */
+.section {
+    padding: 2rem 0;
+    min-height: calc(100vh - 5rem);
+}
+
+.section h1,
+.section h2 {
+    margin-bottom: 1rem;
+    color: #67e8f9;
+}
+
+/* Home */
+.section-home p {
+    font-size: 1.125rem;
+    line-height: 1.5;
+}
+
+/* Games */
+.games-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.game-btn {
+    background: #1f1f1f;
+    border: 2px solid #67e8f9;
+    color: #67e8f9;
+    cursor: pointer;
+    flex: 1 1 130px;
+    padding: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.game-btn:hover:not(:disabled) {
+    background: #67e8f9;
+    color: #121212;
+}
+
+.game-btn:disabled {
+    border-color: #555;
+    color: #555;
+    cursor: not-allowed;
+}
+
+.game-container {
+    background: #252525;
+    border: 2px solid #67e8f9;
+    border-radius: 10px;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem;
+    color: #aaa;
+    position: relative;
+}
+
+/* Contact */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+    background: #1f1f1f;
+    border: 2px solid #67e8f9;
+    border-radius: 6px;
+    padding: 0.75rem;
+    color: #eee;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: none;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    color: #666;
+}
+
+.contact-form button {
+    background: #67e8f9;
+    border: none;
+    color: #121212;
+    padding: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+.contact-form button:hover {
+    background: #59c7e1;
+}
+
+#contact-msg {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #67e8f9;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 1rem 0;
+    background: #1f1f1f;
+    color: #555;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+/* Responsive Nav Toggle */
+@media (max-width: 650px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        background: #1f1f1f;
+        position: absolute;
+        top: 3.8rem;
+        right: 1rem;
+        padding: 1rem;
+        border-radius: 6px;
+        width: 200px;
+        box-shadow: 0 6px 10px rgba(0,0,0,0.8);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+}
