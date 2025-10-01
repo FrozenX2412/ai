@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ultimate Game Portal</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-bar">
+            <a href="#home" class="nav-logo">GamePortal</a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#games" class="nav-link">Games</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <button id="nav-toggle" class="nav-toggle" aria-label="toggle menu">
+                ☰
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="section section-home active-section">
+            <div class="container">
+                <h1>Welcome to Ultimate Game Portal</h1>
+                <p>Enjoy a collection of classic and modern games all in one place.<br />
+                All games built using only HTML, CSS, and JavaScript.<br />
+                Fully responsive and user friendly.</p>
+                <p>Navigate to the Games section to start playing your favorites!</p>
+            </div>
+        </section>
+
+        <section id="games" class="section section-games">
+            <div class="container">
+                <h2>Games</h2>
+                <p>Select a game from below to play. More games coming soon!</p>
+
+                <div class="games-list">
+                    <button class="game-btn" data-game="tetris">Tetris</button>
+                    <button class="game-btn" data-game="snake">Snake</button>
+                    <button class="game-btn" data-game="pong" disabled title="Coming Soon">Pong</button>
+                    <button class="game-btn" data-game="spaceInvaders" disabled title="Coming Soon">Space Invaders</button>
+                    <button class="game-btn" data-game="breakout" disabled title="Coming Soon">Breakout</button>
+                    <button class="game-btn" data-game="pacman" disabled title="Coming Soon">Pac-Man</button>
+                    <button class="game-btn" data-game="asteroids" disabled title="Coming Soon">Asteroids</button>
+                    <button class="game-btn" data-game="2048" disabled title="Coming Soon">2048</button>
+                    <button class="game-btn" data-game="sudoku" disabled title="Coming Soon">Sudoku</button>
+                    <button class="game-btn" data-game="minesweeper" disabled title="Coming Soon">Minesweeper</button>
+                    <button class="game-btn" data-game="ticTacToe" disabled title="Coming Soon">Tic-Tac-Toe</button>
+                    <button class="game-btn" data-game="connectFour" disabled title="Coming Soon">Connect Four</button>
+                    <button class="game-btn" data-game="crossword" disabled title="Coming Soon">Crossword Puzzles</button>
+                    <button class="game-btn" data-game="memoryMatch" disabled title="Coming Soon">Memory Card Matching</button>
+                    <button class="game-btn" data-game="rps" >Rock, Paper, Scissors</button>
+                </div>
+
+                <div id="game-container" class="game-container">
+                    <!-- Game canvases and UI will load here dynamically -->
+                    <p id="game-placeholder" class="game-placeholder">Select a game to start playing</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section section-contact">
+            <div class="container">
+                <h2>Contact & Feedback</h2>
+                <p>Have ideas, issues, or want to see a specific game? Reach out!</p>
+                <form id="contact-form" class="contact-form">
+                    <input type="text" placeholder="Your Name" required />
+                    <input type="email" placeholder="Your Email" required />
+                    <textarea placeholder="Your Message" rows="4" required></textarea>
+                    <button type="submit">Send</button>
+                </form>
+                <p id="contact-msg"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Ultimate Game Portal - Made with HTML, CSS & JS</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
