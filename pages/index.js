@@ -4,21 +4,37 @@ import ChatBubble from '../components/ChatBubble'
 import ChatInput from '../components/ChatInput'
 
 export default function Home() {
-  const [messages, setMessages] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('messages') || 'null') || [{ role: 'assistant', content: 'Hello! I\\'m your AI. Ask me anything.' }] } catch { return [{ role: 'assistant', content: 'Hello! I\\'m your AI. Ask me anything.' }] }
-  })
+  const [messages, setMessages] = useState([
+    { role: 'assistant', content: "Hello! I'm your AI. Ask me anything." }
+  ])
   const [loading, setLoading] = useState(false)
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
+  const [theme, setTheme] = useState('dark')
   const listRef = useRef()
 
-  useEffect(()=>{
-    localStorage.setItem('messages', JSON.stringify(messages))
-    listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' })
+  // Load from localStorage (runs only on client)
+  useEffect(() => {
+    try {
+      const savedMessages = JSON.parse(localStorage.getItem('messages'))
+      if (savedMessages) setMessages(savedMessages)
+
+      const savedTheme = localStorage.getItem('theme')
+      if (savedTheme) setTheme(savedTheme)
+    } catch {}
+  }, [])
+
+  // Save to localStorage + auto scroll
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('messages', JSON.stringify(messages))
+      listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: 'smooth' })
+    }
   }, [messages])
 
-  useEffect(()=>{
+  useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
-    localStorage.setItem('theme', theme)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', theme)
+    }
   }, [theme])
 
   const onSend = async (text) => {
@@ -28,7 +44,11 @@ export default function Home() {
     setLoading(true)
 
     try {
-      const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: newMessages }) })
+      const res = await fetch('/api/chat', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ messages: newMessages }) 
+      })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
       const bot = { role: 'assistant', content: data.reply }
@@ -65,7 +85,9 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="text-center py-4 text-xs text-gray-500">Built with ❤️ — Deploy on Vercel</footer>
+      <footer className="text-center py-4 text-xs text-gray-500">
+        Built with ❤️ — Made by TUSHAR
+      </footer>
     </div>
   )
 }
