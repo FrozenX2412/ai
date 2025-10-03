@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #__next {
+  height: 100%;
+}
+
+/* Small custom styles for message scrollbars & code blocks */
+.code-block {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow: auto;
+}
+
+pre code.hljs {
+  display: block;
+  padding: 1rem;
+}
+
+/* Make markdown headings consistent */
+.prose h1 { font-size: 1.25rem; }
