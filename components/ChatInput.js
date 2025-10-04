@@ -3,9 +3,12 @@ import { useState } from "react";
 export default function ChatInput({ onSend, loading }) {
   const [text, setText] = useState("");
   const [focused, setFocused] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
   const handleSend = () => {
     if (!text.trim() || loading) return;
+    setClicked(true); // trigger arrow animation
+    setTimeout(() => setClicked(false), 300); // reset animation after 300ms
     onSend(text.trim());
     setText("");
   };
@@ -41,21 +44,26 @@ export default function ChatInput({ onSend, loading }) {
           disabled={loading}
           className="flex-1 resize-none bg-transparent focus:outline-none text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 px-2"
         />
+
         <button
           onClick={handleSend}
           disabled={loading}
-          className={`p-2 rounded-full bg-indigo-500 hover:bg-indigo-600 transition-transform duration-200 active:scale-90 ${
-            loading ? "opacity-50 cursor-not-allowed" : "opacity-100"
+          className={`p-3 rounded-full bg-indigo-500 hover:bg-indigo-600 transition-transform duration-200 ${
+            loading
+              ? "opacity-50 cursor-not-allowed"
+              : "active:scale-90 opacity-100"
           }`}
         >
-          {/* Arrow SVG icon */}
+          {/* Animated Arrow SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="w-5 h-5 text-white"
+            className={`w-5 h-5 text-white transform transition-transform duration-300 ${
+              clicked ? "translate-x-2" : "translate-x-0"
+            } hover:translate-x-1`}
           >
             <path
               strokeLinecap="round"
@@ -68,3 +76,4 @@ export default function ChatInput({ onSend, loading }) {
     </div>
   );
 }
+
