@@ -1,21 +1,45 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../pages/_app";
 
 export default function Header() {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const [hidden, setHidden] = useState(false);
+  const [lastScroll, setLastScroll] = useState(0);
+
+  // Scroll detection for semi-float effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
+      if (currentScroll > lastScroll && currentScroll > 60) {
+        setHidden(true); // Hide on scroll down
+      } else {
+        setHidden(false); // Show on scroll up
+      }
+      setLastScroll(currentScroll);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScroll]);
 
   return (
-    <header className="w-full py-4 px-4 sm:px-6 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-      <div className="max-w-5xl mx-auto flex items-center justify-between">
+    <header
+      className={`w-full fixed top-0 left-0 z-50 border-b border-gray-200 dark:border-gray-800 backdrop-blur-md bg-white/80 dark:bg-gray-900/70 shadow-sm transition-all duration-300 ${
+        hidden ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
+      }`}
+    >
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         {/* Logo + Text */}
         <div className="flex items-center gap-3">
-          <div className="text-2xl font-extrabold text-indigo-600 select-none">AI</div>
+          <div className="text-2xl font-extrabold text-indigo-600 select-none">
+            AI
+          </div>
           <div className="hidden sm:block select-none">
             <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              Chat — Masterpiece UI
+              GlacierX
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400">
-              Responsive, Dark/Light, Code blocks, Copy
+              Sleek, fast, and crafted for brilliance.
             </div>
           </div>
         </div>
@@ -24,9 +48,9 @@ export default function Header() {
         <button
           onClick={toggleTheme}
           aria-label="Toggle theme"
-          className="relative w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 bg-gray-200 dark:bg-gray-700 hover:rotate-[360deg] group"
+          className="relative w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 bg-gray-200 dark:bg-gray-700 hover:rotate-[360deg] group hover:scale-110"
         >
-          {/* Sun Icon (visible in light mode) */}
+          {/* Sun Icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -46,7 +70,7 @@ export default function Header() {
             />
           </svg>
 
-          {/* Moon Icon (visible in dark mode) */}
+          {/* Moon Icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
