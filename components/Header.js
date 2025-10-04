@@ -1,3 +1,5 @@
+
+
 import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../pages/_app";
 
@@ -26,8 +28,8 @@ export default function Header() {
     <header
       className={`w-full fixed top-3 left-1/2 -translate-x-1/2 z-50
         border border-gray-200/40 dark:border-gray-800/40
-        bg-white/70 dark:bg-gray-900/70
-        backdrop-blur-[40px] backdrop-saturate-200
+        bg-white/60 dark:bg-gray-900/60
+        backdrop-blur-[50px] backdrop-saturate-200
         shadow-2xl rounded-2xl
         max-w-6xl mx-auto
         transition-all duration-500 ease-in-out
@@ -43,11 +45,11 @@ export default function Header() {
           <div className="text-2xl font-extrabold text-indigo-600 select-none">
             🧊
           </div>
-          <div className="hidden sm:block select-none">
-            <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <div className="flex flex-col select-none">
+            <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
               GlacierX
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
+            <div className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 leading-tight">
               Built by Tushar.
             </div>
           </div>
@@ -57,7 +59,7 @@ export default function Header() {
         <button
           onClick={toggleTheme}
           aria-label="Toggle theme"
-          className="relative w-10 h-10 flex items-center justify-center rounded-full
+          className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full
             transition-all duration-300 bg-gray-200 dark:bg-gray-700
             hover:scale-110 hover:rotate-[360deg] shadow-md group"
         >
@@ -68,7 +70,7 @@ export default function Header() {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className={`absolute w-6 h-6 text-yellow-500 transition-all duration-500 transform ${
+            className={`absolute w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 transition-all duration-500 transform ${
               theme === "light"
                 ? "opacity-100 scale-100 group-hover:rotate-[360deg]"
                 : "opacity-0 scale-0"
@@ -88,7 +90,7 @@ export default function Header() {
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className={`absolute w-6 h-6 text-blue-400 transition-all duration-500 transform ${
+            className={`absolute w-5 h-5 sm:w-6 sm:h-6 text-blue-400 transition-all duration-500 transform ${
               theme === "dark"
                 ? "opacity-100 scale-100 group-hover:rotate-[360deg]"
                 : "opacity-0 scale-0"
@@ -105,4 +107,3 @@ export default function Header() {
     </header>
   );
 }
-
