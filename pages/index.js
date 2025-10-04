@@ -92,10 +92,8 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Floating Chat Input */}
-      <ChatInput onSend={onSend} loading={loading} />
-
-      <footer className="text-center py-6 text-xs text-gray-500">
+            {/* Floating Footer (below chat bar) */}
+      <footer className="fixed bottom-2 left-1/2 -translate-x-1/2 z-[30] text-center text-xs text-gray-500 dark:text-gray-400 pointer-events-none">
         Made by <span className="font-semibold text-indigo-500">TUSHAR</span>
       </footer>
     </div>
