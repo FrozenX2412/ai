@@ -20,3 +20,22 @@ pre code.hljs {
 
 /* Make markdown headings consistent */
 .prose h1 { font-size: 1.25rem; }
+
+@keyframes copied-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(5px) scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0) scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-5px) scale(1);
+  }
+}
+
+.animate-copied {
+  animation: copied-pop 1.5s ease-in-out forwards;
+}
