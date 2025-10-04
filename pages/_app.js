@@ -27,10 +27,10 @@ export default function App({ Component, pageProps }) {
     <>
       {/* Head metadata for SEO + favicon */}
       <Head>
-        <title>AI Chat – FrozenX</title>
+        <title>GlacierX </title>
         <meta
           name="description"
-          content="A professional AI Chat built by FrozenX!"
+          content="Get Free Access to ChatGPT Latest Model!"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content={theme === "dark" ? "#0f172a" : "#ffffff"} />
