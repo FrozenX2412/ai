@@ -6,7 +6,7 @@ export default function Header() {
   const [hidden, setHidden] = useState(false);
   const [lastScroll, setLastScroll] = useState(0);
 
-  // Scroll detection for semi-float effect
+  // Scroll detection for floating header
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
@@ -24,22 +24,30 @@ export default function Header() {
 
   return (
     <header
-      className={`w-full fixed top-0 left-0 z-50 border-b border-gray-200 dark:border-gray-800 backdrop-blur-md bg-white/80 dark:bg-gray-900/70 shadow-sm transition-all duration-300 ${
-        hidden ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
-      }`}
+      className={`w-full fixed top-3 left-1/2 -translate-x-1/2 z-50
+        border border-gray-200/40 dark:border-gray-800/40
+        backdrop-blur-xl bg-white/60 dark:bg-gray-900/60
+        shadow-lg rounded-2xl
+        max-w-6xl mx-auto
+        transition-all duration-500 ease-in-out
+        ${
+          hidden
+            ? "-translate-y-16 opacity-0 scale-95"
+            : "translate-y-0 opacity-100 scale-100"
+        }`}
     >
-      <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
+      <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         {/* Logo + Text */}
         <div className="flex items-center gap-3">
           <div className="text-2xl font-extrabold text-indigo-600 select-none">
-            AI
+            🧊
           </div>
           <div className="hidden sm:block select-none">
             <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               GlacierX
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400">
-              Sleek, fast, and crafted for brilliance.
+              Crafted for elegance and power.
             </div>
           </div>
         </div>
@@ -48,9 +56,11 @@ export default function Header() {
         <button
           onClick={toggleTheme}
           aria-label="Toggle theme"
-          className="relative w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 bg-gray-200 dark:bg-gray-700 hover:rotate-[360deg] group hover:scale-110"
+          className="relative w-10 h-10 flex items-center justify-center rounded-full
+            transition-all duration-300 bg-gray-200 dark:bg-gray-700
+            hover:scale-110 hover:rotate-[360deg] shadow-md group"
         >
-          {/* Sun Icon */}
+          {/* Sun Icon (light mode) */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -70,7 +80,7 @@ export default function Header() {
             />
           </svg>
 
-          {/* Moon Icon */}
+          {/* Moon Icon (dark mode) */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -94,3 +104,4 @@ export default function Header() {
     </header>
   );
 }
+
