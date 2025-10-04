@@ -5,13 +5,12 @@ import ChatInput from '../components/ChatInput'
 
 export default function Home() {
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: "Hello! I'm your AI. Ask me anything." }
+    { role: 'assistant', content: "Hello! Ask me anything." }
   ])
   const [loading, setLoading] = useState(false)
   const [theme, setTheme] = useState('dark')
   const listRef = useRef()
-
-  // Load from localStorage (runs only on client)
+  
   useEffect(() => {
     try {
       const savedMessages = JSON.parse(localStorage.getItem('messages'))
@@ -22,7 +21,7 @@ export default function Home() {
     } catch {}
   }, [])
 
-  // Save to localStorage + auto scroll
+  
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('messages', JSON.stringify(messages))
@@ -86,7 +85,7 @@ export default function Home() {
       </main>
 
       <footer className="text-center py-4 text-xs text-gray-500">
-        Built with ❤️ — Made by TUSHAR
+          Made by TUSHAR
       </footer>
     </div>
   )
