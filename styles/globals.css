@@ -47,3 +47,10 @@ html {
 body {
   @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100;
 }
+
+body {
+  background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+}
+.dark body {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
