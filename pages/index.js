@@ -92,10 +92,17 @@ export default function Home() {
         </div>
       </main>
 
-            {/* Floating Footer (below chat bar) */}
-      <footer className="fixed bottom-2 left-1/2 -translate-x-1/2 z-[30] text-center text-xs text-gray-500 dark:text-gray-400 pointer-events-none">
-        Made by <span className="font-semibold text-indigo-500">TUSHAR</span>
-      </footer>
+                    {/* Chat Input */}
+        <div className="relative z-50">
+          <ChatInput onSend={onSend} loading={loading} />
+        </div>
+
+        {/* Footer just below chat bar */}
+        <div className="h-20"></div> {/* Spacer so footer isn’t hidden */}
+        <footer className="fixed bottom-1 left-1/2 -translate-x-1/2 z-40 text-center text-xs text-gray-500 dark:text-gray-400">
+          Made by <span className="font-semibold text-indigo-500">TUSHAR</span>
+        </footer>
+
     </div>
   );
 }
