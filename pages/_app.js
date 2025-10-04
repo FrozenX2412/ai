@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }) {
         <title>AI Chat – FrozenX</title>
         <meta
           name="description"
-          content="A professional AI Chat built by FrozenX – modern, responsive, and intelligent."
+          content="A professional AI Chat built by FrozenX!"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content={theme === "dark" ? "#0f172a" : "#ffffff"} />
