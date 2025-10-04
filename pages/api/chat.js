@@ -36,31 +36,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    // --- STREAMING RESPONSE ---
+    // --- NON-STREAMING COMPLETION ---
     const completion = await client.chat.completions.create({
       model: process.env.A4F_MODEL || "provider-1/chatgpt-4o-latest",
       messages,
-      stream: true,
+      stream: false, // 🚫 removed streaming
     });
 
-    res.writeHead(200, {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache, no-transform",
-      Connection: "keep-alive",
-    });
-
-    let fullReply = "";
-
-    for await (const chunk of completion) {
-      const content = chunk?.choices?.[0]?.delta?.content || "";
-      if (content) {
-        fullReply += content;
-        res.write(`data: ${JSON.stringify({ chunk: content })}\n\n`);
-      }
-    }
-
-    res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
-    res.end();
+    const fullReply = completion.choices?.[0]?.message?.content || "No response.";
 
     // --- DISCORD LOGGING ---
     const webhook = process.env.DISCORD_WEBHOOK_URL;
@@ -123,9 +106,16 @@ export default async function handler(req, res) {
         console.error("Discord webhook failed:", e.message);
       }
     }
+
+    // ✅ Return clean JSON response
+    return res.status(200).json({ reply: fullReply });
   } catch (err) {
     console.error("AI error:", err.message);
-    if (!res.headersSent)
-      res.status(500).json({ error: "AI service error: " + err.message });
+    if (!res.headersSent) {
+      return res.status(500).json({
+        error: "AI service error",
+        details: err.message || "Unknown error occurred.",
+      });
+    }
   }
 }
