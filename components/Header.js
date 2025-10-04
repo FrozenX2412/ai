@@ -48,7 +48,7 @@ export default function Header() {
               GlacierX
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400">
-              Crafted for elegance and power.
+              Built by Tushar.
             </div>
           </div>
         </div>
