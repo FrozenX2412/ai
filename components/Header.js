@@ -26,9 +26,9 @@ export default function Header() {
     <header
       className={`w-full fixed top-3 left-1/2 -translate-x-1/2 z-50
         border border-gray-200/40 dark:border-gray-800/40
-        bg-white/30 dark:bg-gray-900/30
-        backdrop-blur-2xl backdrop-saturate-150
-        shadow-xl rounded-2xl
+        bg-white/70 dark:bg-gray-900/70
+        backdrop-blur-[40px] backdrop-saturate-200
+        shadow-2xl rounded-2xl
         max-w-6xl mx-auto
         transition-all duration-500 ease-in-out
         ${
@@ -105,3 +105,4 @@ export default function Header() {
     </header>
   );
 }
+
