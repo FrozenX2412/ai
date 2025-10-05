@@ -27,15 +27,21 @@ export default function App({ Component, pageProps }) {
     <>
       {/* Head metadata for SEO + favicon */}
       <Head>
-        <title>GlacierX </title>
+        <title>GlacierX</title>
         <meta
           name="description"
           content="Get Free Access to ChatGPT Latest Model!"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content={theme === "dark" ? "#0f172a" : "#ffffff"} />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
+        <meta
+          name="theme-color"
+          content={theme === "dark" ? "#0f172a" : "#ffffff"}
+        />
+
+        {/* ✅ Favicon setup */}
+        <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
       </Head>
 
       {/* Provide theme context to all components */}
@@ -45,3 +51,4 @@ export default function App({ Component, pageProps }) {
     </>
   );
 }
+
