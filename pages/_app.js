@@ -41,6 +41,12 @@ export default function App({ Component, pageProps }) {
   <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" href="/favicon.png" />
+
+  /*-- ✅ Google AdSense --*/
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3349470835131260"
+    crossorigin="anonymous"></script>
+
+    
 </Head>
 
   
