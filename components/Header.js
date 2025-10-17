@@ -5,7 +5,7 @@ export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarO
   return (
     <header
       className={`fixed top-0 left-1/2 -translate-x-1/2 z-60
-        ${sidebarOpen ? "max-w-[80%]" : "max-w-6xl"}
+        max-w-6xl
         w-full mx-auto
         border border-gray-200/40 dark:border-gray-800/40
         bg-white/60 dark:bg-gray-900/60
@@ -50,7 +50,7 @@ export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarO
           </div>
         </div>
 
-        {/* Right controls (theme toggle + sidebar close when open) */}
+        {/* Right controls (theme toggle only) */}
         <div className="flex items-center gap-3">
           {/* Theme Toggle */}
           <button
@@ -100,19 +100,6 @@ export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarO
               />
             </svg>
           </button>
-
-          {/* Close Sidebar button visible when sidebar is open */}
-          {sidebarOpen && (
-            <button
-              onClick={onToggleSidebar}
-              aria-label="Close sidebar"
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-white/70 dark:bg-gray-800/70 border border-gray-200/40 dark:border-gray-700/40 shadow-sm hover:scale-105 transition"
-            >
-              <svg className="w-4 h-4 text-gray-800 dark:text-gray-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M6 6l12 12M6 18L18 6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-          )}
         </div>
       </div>
     </header>
