@@ -33,7 +33,7 @@ export default function Home() {
   // small util
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-  // Close menus / renaming if clicking outside sidebar area
+  // Close menus / renaming if clicking outside container area
   useEffect(() => {
     function onClick(e) {
       if (!containerRef.current) return;
@@ -46,6 +46,20 @@ export default function Home() {
     window.addEventListener("click", onClick);
     return () => window.removeEventListener("click", onClick);
   }, []);
+
+  // Close the sidebar when clicking anywhere outside the sidebar (feature requested)
+  useEffect(() => {
+    function onOutsideClick(e) {
+      if (!sidebarOpen) return;
+      if (!sidebarRef.current) return;
+      // if click is outside sidebar element, close sidebar
+      if (!sidebarRef.current.contains(e.target)) {
+        setSidebarOpen(false);
+      }
+    }
+    window.addEventListener("click", onOutsideClick);
+    return () => window.removeEventListener("click", onOutsideClick);
+  }, [sidebarOpen]);
 
   // Load chats & theme from localStorage
   useEffect(() => {
@@ -309,7 +323,7 @@ export default function Home() {
     setAnimatingName(name);
     setAnimatingType("delete");
 
-    for (let i = name.length; i >= 0; i--) {
+    for (let i = name.length; i >= 0; i++) {
       setDisplayNames((prev) => ({ ...prev, [name]: name.slice(0, i) }));
       await sleep(55);
     }
@@ -337,13 +351,13 @@ export default function Home() {
       {/* Sidebar
           - On mobile: use half screen width (w-1/2) instead of full width so it doesn't cover entire phone.
           - On sm+ keep fixed width (sm:w-72).
-          - Sidebar sits above message bar (z-50) so message bar's z-index must be lower.
+          - Sidebar z-index set higher than message bar but lower than header.
       */}
       <div
         ref={sidebarRef}
         className={`fixed top-0 left-0 h-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } w-1/2 sm:w-72 z-50`}
+        } w-1/2 sm:w-72 z-60`}
       >
         {/* floating header area inside sidebar */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-start gap-3">
@@ -538,10 +552,10 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
         {/* Floating Header (always visible while sidebar is open)
-            Header stays above the sidebar (z-60) and remains interactive.
-            Delete modal keeps an even higher z-index so it overlays everything when shown. */}
+            Header z-index is now higher than sidebar and message bar so it stays on top.
+            Delete modal still uses a very large z-index so it overlays the header when shown. */}
         <div
-          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-60 transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
+          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-70 transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
           style={{ pointerEvents: "auto" }}
         >
           <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/60 rounded-2xl shadow-lg border border-gray-200/20 dark:border-gray-700/30">
@@ -564,14 +578,14 @@ export default function Home() {
         </main>
 
         {/* Chat Input */}
-        {/* Lower the chat input z-index so the sidebar overlays it when open */}
-        <div className="relative z-30">
+        {/* Chat input/message bar z-index lowered so sidebar overlays it; header is still above both. */}
+        <div className="relative z-50">
           <ChatInput onSend={onSend} loading={loading} />
         </div>
 
         {/* Footer */}
         <div className="h-20"></div>
-        <footer className="fixed bottom-1 left-1/2 -translate-x-1/2 z-40 text-center text-xs text-gray-500 dark:text-gray-400">
+        <footer className="fixed bottom-1 left-1/2 -translate-x-1/2 z-50 text-center text-xs text-gray-500 dark:text-gray-400">
           Made by <span className="font-semibold text-indigo-500">TUSHAR</span>
         </footer>
       </div>
