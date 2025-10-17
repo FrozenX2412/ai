@@ -1,25 +1,45 @@
 import { useContext } from "react";
 import { ThemeContext } from "../pages/_app";
 
-export default function Header() {
-  const { theme, toggleTheme } = useContext(ThemeContext);
-
+export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarOpen }) {
   return (
     <header
-      className="fixed top-0 left-1/2 -translate-x-1/2 z-50
-        w-full max-w-6xl mx-auto
+      className={`fixed top-0 left-1/2 -translate-x-1/2 z-50
+        ${sidebarOpen ? "max-w-[80%]" : "max-w-6xl"}
+        w-full mx-auto
         border border-gray-200/40 dark:border-gray-800/40
         bg-white/60 dark:bg-gray-900/60
         backdrop-blur-[50px] backdrop-saturate-200
         shadow-2xl rounded-2xl
-        transition-all duration-500 ease-in-out"
+        transition-all duration-500 ease-in-out`}
     >
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
-        {/* Logo + Text */}
+        {/* Left Section: Menu + Title */}
         <div className="flex items-center gap-3">
-          <div className="text-2xl font-extrabold text-indigo-600 select-none">
-            🧊
-          </div>
+          {/* Hamburger Menu Icon */}
+          <button
+            onClick={onToggleSidebar}
+            aria-label="Toggle sidebar"
+            className="flex flex-col justify-center w-8 h-8 gap-[5px] group"
+          >
+            <span
+              className={`h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 ${
+                sidebarOpen ? "rotate-45 translate-y-[7px]" : ""
+              }`}
+            ></span>
+            <span
+              className={`h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 ${
+                sidebarOpen ? "opacity-0" : "opacity-100"
+              }`}
+            ></span>
+            <span
+              className={`h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 ${
+                sidebarOpen ? "-rotate-45 -translate-y-[7px]" : ""
+              }`}
+            ></span>
+          </button>
+
+          {/* Brand Name */}
           <div className="flex flex-col select-none">
             <div className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
               GlacierX
@@ -30,9 +50,9 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Theme Toggle Button */}
+        {/* Theme Toggle */}
         <button
-          onClick={toggleTheme}
+          onClick={onToggleTheme}
           aria-label="Toggle theme"
           className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full
             transition-all duration-300 bg-gray-200 dark:bg-gray-700
