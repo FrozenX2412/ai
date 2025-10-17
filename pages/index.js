@@ -19,9 +19,11 @@ export default function Home() {
       if (savedChats) setChats(savedChats);
       if (savedTheme) setTheme(savedTheme);
 
-      // If no chat exists, create one
+      // Create default chat if none exist
       if (!savedChats || Object.keys(savedChats).length === 0) {
-        const defaultChat = { "New Chat": [{ role: "assistant", content: "Hello! Ask me anything." }] };
+        const defaultChat = {
+          "New Chat": [{ role: "assistant", content: "Hello! Ask me anything." }],
+        };
         setChats(defaultChat);
         setCurrentChat("New Chat");
         localStorage.setItem("chats", JSON.stringify(defaultChat));
@@ -31,23 +33,23 @@ export default function Home() {
     } catch {}
   }, []);
 
-  // Auto-save chats
+  // Auto-save chats + auto-scroll
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("chats", JSON.stringify(chats));
-      listRef.current?.scrollTo({
-        top: listRef.current.scrollHeight,
-        behavior: "smooth",
-      });
+      if (listRef.current) {
+        listRef.current.scrollTo({
+          top: listRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }
     }
   }, [chats, currentChat]);
 
   // Apply theme
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
-    if (typeof window !== "undefined") {
-      localStorage.setItem("theme", theme);
-    }
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
   // --- Chat Operations ---
@@ -73,7 +75,7 @@ export default function Home() {
         ...prev,
         [currentChat]: [...prev[currentChat], bot],
       }));
-    } catch (e) {
+    } catch {
       setChats((prev) => ({
         ...prev,
         [currentChat]: [
@@ -88,7 +90,11 @@ export default function Home() {
 
   const createChat = () => {
     const name = `Chat ${Object.keys(chats).length + 1}`;
-    setChats({ ...chats, [name]: [{ role: "assistant", content: "New chat started!" }] });
+    const updated = {
+      ...chats,
+      [name]: [{ role: "assistant", content: "New chat started!" }],
+    };
+    setChats(updated);
     setCurrentChat(name);
   };
 
@@ -107,19 +113,21 @@ export default function Home() {
     const updated = { ...chats };
     delete updated[name];
     const first = Object.keys(updated)[0] || "New Chat";
-    if (!updated[first]) updated[first] = [{ role: "assistant", content: "Hello! Ask me anything." }];
+    if (!updated[first])
+      updated[first] = [{ role: "assistant", content: "Hello! Ask me anything." }];
     setChats(updated);
     setCurrentChat(first);
   };
 
   const onToggleTheme = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  const onToggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   // --- UI ---
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex">
       {/* Sidebar */}
       <div
-        className={`fixed md:static z-40 top-0 left-0 h-full w-64 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed md:static z-40 top-0 left-0 h-full w-64 bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
@@ -127,12 +135,13 @@ export default function Home() {
           <h2 className="font-semibold text-lg">Chats</h2>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="md:hidden text-gray-500 hover:text-gray-900 dark:hover:text-gray-100"
+            className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-100"
           >
             ✕
           </button>
         </div>
 
+        {/* Chat List */}
         <div className="overflow-y-auto h-[calc(100%-7rem)] p-2 space-y-1">
           {Object.keys(chats).map((name) => (
             <div
@@ -143,7 +152,13 @@ export default function Home() {
                   : "hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
             >
-              <button onClick={() => setCurrentChat(name)} className="flex-1 text-left truncate">
+              <button
+                onClick={() => {
+                  setCurrentChat(name);
+                  setSidebarOpen(false);
+                }}
+                className="flex-1 text-left truncate"
+              >
                 {name}
               </button>
               <div className="flex gap-2 ml-2 text-sm">
@@ -166,24 +181,28 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
-        {/* Floating Header */}
-        <div className="fixed top-3 left-1/2 transform -translate-x-1/2 z-50 w-[95%] sm:w-[90%] md:w-[85%]">
+        {/* Floating Header (reacts to sidebar open) */}
+        <div
+          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ${
+            sidebarOpen ? "w-[80%]" : "w-[95%] sm:w-[90%] md:w-[85%]"
+          }`}
+        >
           <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/60 rounded-2xl shadow-lg border border-gray-200/20 dark:border-gray-700/30">
-            <Header onToggleTheme={onToggleTheme} theme={theme} />
+            <Header
+              onToggleTheme={onToggleTheme}
+              theme={theme}
+              onToggleSidebar={onToggleSidebar}
+              sidebarOpen={sidebarOpen}
+            />
           </div>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="absolute top-5 left-4 z-50 md:hidden p-2 bg-gray-200 dark:bg-gray-700 rounded-md"
-        >
-          ☰
-        </button>
-
         {/* Chat Messages */}
         <main className="flex-1 max-w-5xl mx-auto w-full p-4 sm:p-6 flex flex-col pt-24 pb-28">
-          <div ref={listRef} className="flex-1 overflow-y-auto mb-4 space-y-3 scroll-smooth">
+          <div
+            ref={listRef}
+            className="flex-1 overflow-y-auto mb-4 space-y-3 scroll-smooth"
+          >
             {chats[currentChat]?.map((m, i) => (
               <ChatBubble
                 key={i}
@@ -194,7 +213,7 @@ export default function Home() {
           </div>
         </main>
 
-        {/* Input */}
+        {/* Chat Input */}
         <div className="relative z-50">
           <ChatInput onSend={onSend} loading={loading} />
         </div>
