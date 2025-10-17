@@ -17,12 +17,13 @@ export default function ChatBubble({ m, onCopy }) {
   };
 
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"} py-3 px-2`}>
+    // Use neutral container and control alignment on the bubble itself (ml-auto / mr-auto)
+    <div className="flex py-3 px-2">
       <div
-        className={`relative max-w-[90%] sm:max-w-[75%] px-4 py-3 rounded-2xl shadow-lg border border-gray-300/20 dark:border-gray-700/40 transition-all duration-300
+        className={`relative max-w-[90%] sm:max-w-[75%] px-5 py-3 rounded-3xl shadow-[0_6px_18px_rgba(15,23,42,0.06)] border transition-all duration-300
           ${isUser
-            ? "bg-indigo-600 text-white rounded-br-none"
-            : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-none"
+            ? "ml-auto bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-white border-gray-200/60 dark:border-gray-700/60 rounded-br-none"
+            : "mr-auto bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 border-gray-200/40 dark:border-gray-700/40 rounded-bl-none"
           }`}
       >
         {/* Copy Button (AI Messages Only) */}
@@ -31,7 +32,7 @@ export default function ChatBubble({ m, onCopy }) {
             <button
               onClick={handleCopy}
               aria-label="Copy response"
-              className="absolute bottom-2 right-2 p-1.5 rounded-md text-gray-400 hover:text-indigo-500 transition-all"
+              className="absolute bottom-3 right-3 p-1.5 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-all"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +51,7 @@ export default function ChatBubble({ m, onCopy }) {
             </button>
 
             {copied && (
-              <div className="absolute bottom-2 right-10 flex items-center gap-1 text-green-500 text-xs font-medium animate-pulse">
+              <div className="absolute bottom-3 right-11 flex items-center gap-1 text-green-500 text-xs font-medium animate-pulse">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -86,7 +87,7 @@ export default function ChatBubble({ m, onCopy }) {
               code({ inline, className, children, ...props }) {
                 return inline ? (
                   <code
-                    className="bg-gray-800/80 text-indigo-300 px-1 py-0.5 rounded text-[0.9em] font-mono"
+                    className="bg-gray-900/6 dark:bg-gray-200/6 px-1 py-0.5 rounded text-[0.9em] font-mono"
                     {...props}
                   >
                     {children}
