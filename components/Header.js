@@ -4,7 +4,7 @@ import { ThemeContext } from "../pages/_app";
 export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarOpen }) {
   return (
     <header
-      className={`fixed top-0 left-1/2 -translate-x-1/2 z-50
+      className={`fixed top-0 left-1/2 -translate-x-1/2 z-60
         ${sidebarOpen ? "max-w-[80%]" : "max-w-6xl"}
         w-full mx-auto
         border border-gray-200/40 dark:border-gray-800/40
@@ -50,54 +50,70 @@ export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarO
           </div>
         </div>
 
-        {/* Theme Toggle */}
-        <button
-          onClick={onToggleTheme}
-          aria-label="Toggle theme"
-          className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full
-            transition-all duration-300 bg-gray-200 dark:bg-gray-700
-            hover:scale-110 hover:rotate-[360deg] shadow-md group"
-        >
-          {/* Sun Icon (light mode) */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className={`absolute w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 transition-all duration-500 transform ${
-              theme === "light"
-                ? "opacity-100 scale-100 group-hover:rotate-[360deg]"
-                : "opacity-0 scale-0"
-            }`}
+        {/* Right controls (theme toggle + sidebar close when open) */}
+        <div className="flex items-center gap-3">
+          {/* Theme Toggle */}
+          <button
+            onClick={onToggleTheme}
+            aria-label="Toggle theme"
+            className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full
+              transition-all duration-300 bg-gray-200 dark:bg-gray-700
+              hover:scale-110 hover:rotate-[360deg] shadow-md group"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 3v1m0 16v1m8.485-8.485h1M3.515 12.515h1M16.95 7.05l.707-.707M6.343 17.657l.707-.707M16.95 16.95l.707.707M6.343 6.343l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"
-            />
-          </svg>
+            {/* Sun Icon (light mode) */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className={`absolute w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 transition-all duration-500 transform ${
+                theme === "light"
+                  ? "opacity-100 scale-100 group-hover:rotate-[360deg]"
+                  : "opacity-0 scale-0"
+              }`}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 3v1m0 16v1m8.485-8.485h1M3.515 12.515h1M16.95 7.05l.707-.707M6.343 17.657l.707-.707M16.95 16.95l.707.707M6.343 6.343l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"
+              />
+            </svg>
 
-          {/* Moon Icon (dark mode) */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className={`absolute w-5 h-5 sm:w-6 sm:h-6 text-blue-400 transition-all duration-500 transform ${
-              theme === "dark"
-                ? "opacity-100 scale-100 group-hover:rotate-[360deg]"
-                : "opacity-0 scale-0"
-            }`}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
-            />
-          </svg>
-        </button>
+            {/* Moon Icon (dark mode) */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className={`absolute w-5 h-5 sm:w-6 sm:h-6 text-blue-400 transition-all duration-500 transform ${
+                theme === "dark"
+                  ? "opacity-100 scale-100 group-hover:rotate-[360deg]"
+                  : "opacity-0 scale-0"
+              }`}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"
+              />
+            </svg>
+          </button>
+
+          {/* Close Sidebar button visible when sidebar is open */}
+          {sidebarOpen && (
+            <button
+              onClick={onToggleSidebar}
+              aria-label="Close sidebar"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-white/70 dark:bg-gray-800/70 border border-gray-200/40 dark:border-gray-700/40 shadow-sm hover:scale-105 transition"
+            >
+              <svg className="w-4 h-4 text-gray-800 dark:text-gray-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M6 6l12 12M6 18L18 6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
     </header>
   );
