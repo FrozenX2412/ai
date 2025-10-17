@@ -335,7 +335,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex" ref={containerRef}>
       {/* Sidebar
-          z-index ensures the sidebar sits above the message input so the portion under it appears behind */}
+          unchanged width (full-sized as before) and sits above chat input when open.
+          Sidebar z-50 so header (z-60) stays visible above it. */}
       <div
         ref={sidebarRef}
         className={`fixed z-50 top-0 left-0 h-full w-72 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ${sidebarOpen ? "translate-x-0" : "-translate-x-72"} relative`}
@@ -346,7 +347,7 @@ export default function Home() {
             <h2 className="font-semibold text-lg">Chats</h2>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Your conversations</p>
           </div>
-          {/* Removed sidebar close button here (header already has close) */}
+          {/* header close was removed from Header component per your request; no extra close button here */}
         </div>
 
         {/* Notice Box with warning icon */}
@@ -487,9 +488,7 @@ export default function Home() {
           })}
         </div>
 
-        {/* Dropdown menu rendered as an absolutely positioned element inside the sidebar
-            (not fixed center) so it appears near the clicked row but won't be clipped by the
-            scroll container. This preserves the old visual placement while keeping options clickable. */}
+        {/* Dropdown menu (keeps icons + label as before) */}
         {openMenu && menuPos && (
           <div
             onClick={(e) => e.stopPropagation()}
@@ -530,10 +529,10 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
-        {/* Floating Header (reacts to sidebar open)
-            Header z-index intentionally higher so it's visible during sidebar open and includes a close button shown via the Header component. */}
+        {/* Floating Header (always visible while sidebar is open)
+            removed conditional width so header stays visible and unchanged when the sidebar opens */}
         <div
-          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-60 transition-all duration-500 ${sidebarOpen ? "w-[80%]" : "w-[95%] sm:w-[90%] md:w-[85%]"}`}
+          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-60 transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
         >
           <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/60 rounded-2xl shadow-lg border border-gray-200/20 dark:border-gray-700/30">
             <Header
