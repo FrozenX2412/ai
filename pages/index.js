@@ -335,8 +335,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex" ref={containerRef}>
       {/* Sidebar
-          Changed z-index so the sidebar sits above the message input (so the portion of the input
-          underneath the sidebar appears visually behind it). Sidebar width remains full (w-72). */}
+          z-index ensures the sidebar sits above the message input so the portion under it appears behind */}
       <div
         ref={sidebarRef}
         className={`fixed z-50 top-0 left-0 h-full w-72 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ${sidebarOpen ? "translate-x-0" : "-translate-x-72"} relative`}
@@ -501,13 +500,25 @@ export default function Home() {
               onClick={(e) => startRename(e, openMenu)}
               className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition transform ${clickedOption === `${openMenu}:rename` ? "zoom-click glint" : ""}`}
             >
-              Rename
+              {/* pencil icon + label */}
+              <span className="inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M4 13.5V20h6.5L20.5 9.999l-6.5-6.5L4 13.5z" />
+                </svg>
+                <span>Rename</span>
+              </span>
             </button>
             <button
               onClick={(e) => confirmDelete(e, openMenu)}
               className={`w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition transform ${clickedOption === `${openMenu}:delete` ? "zoom-click glint" : ""}`}
             >
-              Delete
+              {/* trash icon + label */}
+              <span className="inline-flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M20 7H4M9 7V4h6v3m1 0l-1 13a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7" />
+                </svg>
+                <span>Delete</span>
+              </span>
             </button>
           </div>
         )}
@@ -520,7 +531,7 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
         {/* Floating Header (reacts to sidebar open)
-            Raise header z-index so it still floats above the sidebar like before. */}
+            Header z-index intentionally higher so it's visible during sidebar open and includes a close button shown via the Header component. */}
         <div
           className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-60 transition-all duration-500 ${sidebarOpen ? "w-[80%]" : "w-[95%] sm:w-[90%] md:w-[85%]"}`}
         >
@@ -544,7 +555,7 @@ export default function Home() {
         </main>
 
         {/* Chat Input */}
-        {/* Keep chat input visible, but ensure sidebar visually sits in front of it when overlapping by lowering input z-index */}
+        {/* Keep chat input visible; ensure sidebar visually sits in front of it when overlapping by lowering input z-index */}
         <div className="relative z-40">
           <ChatInput onSend={onSend} loading={loading} />
         </div>
