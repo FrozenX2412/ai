@@ -309,7 +309,7 @@ export default function Home() {
     setAnimatingName(name);
     setAnimatingType("delete");
 
-    for (let i = name.length; i >= 0; i--) {
+    for (let i = name.length; i >= 0; i++) {
       setDisplayNames((prev) => ({ ...prev, [name]: name.slice(0, i) }));
       await sleep(55);
     }
@@ -337,7 +337,8 @@ export default function Home() {
       {/* Sidebar
           - Full-sized on small screens when open (w-full), fixed width on sm+ (w-72)
           - Slides in/out with transform based on sidebarOpen
-          - Lower z-index than Header so Header remains visible above it */}
+          - Lower z-index than Header so Header remains visible above it.
+      */}
       <div
         ref={sidebarRef}
         className={`fixed top-0 left-0 h-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ease-in-out ${
@@ -350,7 +351,6 @@ export default function Home() {
             <h2 className="font-semibold text-lg">Chats</h2>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Your conversations</p>
           </div>
-          {/* header close was removed from Header component per your request; no extra close button here */}
         </div>
 
         {/* Notice Box with warning icon */}
@@ -539,9 +539,12 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
         {/* Floating Header (always visible while sidebar is open)
-            Header has higher z-index than sidebar so it remains visible when sidebar is open */}
+            Header is fixed and given a high z-index so it stays above the sidebar,
+            but we ensure the delete confirmation modal uses an even higher zIndex (100000)
+            so the modal overlays the header when shown. */}
         <div
-          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-60 transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
+          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
+          style={{ pointerEvents: "auto" }} // ensure header remains interactive
         >
           <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/60 rounded-2xl shadow-lg border border-gray-200/20 dark:border-gray-700/30">
             <Header
@@ -577,7 +580,7 @@ export default function Home() {
 
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 flex items-center justify-center" style={{ zIndex: 9999 }}>
+        <div className="fixed inset-0 flex items-center justify-center" style={{ zIndex: 100000 }}>
           {/* backdrop */}
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={cancelDelete} />
           {/* modal */}
