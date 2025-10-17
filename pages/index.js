@@ -334,10 +334,12 @@ export default function Home() {
   // --- UI ---
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex" ref={containerRef}>
-      {/* Sidebar */}
+      {/* Sidebar
+          Changed z-index so the sidebar sits above the message input (so the portion of the input
+          underneath the sidebar appears visually behind it). Sidebar width remains full (w-72). */}
       <div
         ref={sidebarRef}
-        className={`fixed z-40 top-0 left-0 h-full w-72 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ${sidebarOpen ? "translate-x-0" : "-translate-x-72"} relative`}
+        className={`fixed z-50 top-0 left-0 h-full w-72 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ${sidebarOpen ? "translate-x-0" : "-translate-x-72"} relative`}
       >
         {/* floating header area inside sidebar */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-start gap-3">
@@ -517,9 +519,10 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
-        {/* Floating Header (reacts to sidebar open) */}
+        {/* Floating Header (reacts to sidebar open)
+            Raise header z-index so it still floats above the sidebar like before. */}
         <div
-          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ${sidebarOpen ? "w-[80%]" : "w-[95%] sm:w-[90%] md:w-[85%]"}`}
+          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-60 transition-all duration-500 ${sidebarOpen ? "w-[80%]" : "w-[95%] sm:w-[90%] md:w-[85%]"}`}
         >
           <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/60 rounded-2xl shadow-lg border border-gray-200/20 dark:border-gray-700/30">
             <Header
@@ -541,8 +544,8 @@ export default function Home() {
         </main>
 
         {/* Chat Input */}
-        {/* Keep chat input visible even when the sidebar is open (user requested it shouldn't vanish) */}
-        <div className="relative z-50">
+        {/* Keep chat input visible, but ensure sidebar visually sits in front of it when overlapping by lowering input z-index */}
+        <div className="relative z-40">
           <ChatInput onSend={onSend} loading={loading} />
         </div>
 
