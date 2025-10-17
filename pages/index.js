@@ -309,7 +309,7 @@ export default function Home() {
     setAnimatingName(name);
     setAnimatingType("delete");
 
-    for (let i = name.length; i >= 0; i++) {
+    for (let i = name.length; i >= 0; i--) {
       setDisplayNames((prev) => ({ ...prev, [name]: name.slice(0, i) }));
       await sleep(55);
     }
@@ -335,15 +335,15 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex" ref={containerRef}>
       {/* Sidebar
-          - Full-sized on small screens when open (w-full), fixed width on sm+ (w-72)
-          - Slides in/out with transform based on sidebarOpen
-          - Lower z-index than Header so Header remains visible above it.
+          - On mobile: use half screen width (w-1/2) instead of full width so it doesn't cover entire phone.
+          - On sm+ keep fixed width (sm:w-72).
+          - Sidebar sits above message bar (z-50) so message bar's z-index must be lower.
       */}
       <div
         ref={sidebarRef}
         className={`fixed top-0 left-0 h-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } w-full sm:w-72 z-40`}
+        } w-1/2 sm:w-72 z-50`}
       >
         {/* floating header area inside sidebar */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-start gap-3">
@@ -356,7 +356,6 @@ export default function Home() {
         {/* Notice Box with warning icon */}
         <div className="m-3 p-3 rounded-md bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-800 text-sm text-yellow-800 dark:text-yellow-200 flex items-start gap-3">
           <div className="flex-none">
-            {/* warning SVG icon (not emoji) */}
             <svg className="w-5 h-5 text-yellow-700 dark:text-yellow-200" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M12 2L2 20h20L12 2z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M12 9v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -539,12 +538,11 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
         {/* Floating Header (always visible while sidebar is open)
-            Header is fixed and given a high z-index so it stays above the sidebar,
-            but we ensure the delete confirmation modal uses an even higher zIndex (100000)
-            so the modal overlays the header when shown. */}
+            Header stays above the sidebar (z-60) and remains interactive.
+            Delete modal keeps an even higher z-index so it overlays everything when shown. */}
         <div
-          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
-          style={{ pointerEvents: "auto" }} // ensure header remains interactive
+          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-60 transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
+          style={{ pointerEvents: "auto" }}
         >
           <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/60 rounded-2xl shadow-lg border border-gray-200/20 dark:border-gray-700/30">
             <Header
@@ -566,8 +564,8 @@ export default function Home() {
         </main>
 
         {/* Chat Input */}
-        {/* Keep chat input visible; ensure sidebar visually sits in front of it when overlapping by lowering input z-index */}
-        <div className="relative z-40">
+        {/* Lower the chat input z-index so the sidebar overlays it when open */}
+        <div className="relative z-30">
           <ChatInput onSend={onSend} loading={loading} />
         </div>
 
