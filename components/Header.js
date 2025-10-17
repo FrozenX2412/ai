@@ -1,43 +1,18 @@
-
-
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { ThemeContext } from "../pages/_app";
 
 export default function Header() {
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const [hidden, setHidden] = useState(false);
-  const [lastScroll, setLastScroll] = useState(0);
-
-  // Scroll detection for floating header
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      if (currentScroll > lastScroll && currentScroll > 60) {
-        setHidden(true); // Hide on scroll down
-      } else {
-        setHidden(false); // Show on scroll up
-      }
-      setLastScroll(currentScroll);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScroll]);
 
   return (
     <header
-      className={`w-full fixed top-3 left-1/2 -translate-x-1/2 z-50
+      className="fixed top-0 left-1/2 -translate-x-1/2 z-50
+        w-full max-w-6xl mx-auto
         border border-gray-200/40 dark:border-gray-800/40
         bg-white/60 dark:bg-gray-900/60
         backdrop-blur-[50px] backdrop-saturate-200
         shadow-2xl rounded-2xl
-        max-w-6xl mx-auto
-        transition-all duration-500 ease-in-out
-        ${
-          hidden
-            ? "-translate-y-16 opacity-0 scale-95"
-            : "translate-y-0 opacity-100 scale-100"
-        }`}
+        transition-all duration-500 ease-in-out"
     >
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         {/* Logo + Text */}
