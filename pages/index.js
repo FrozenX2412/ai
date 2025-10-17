@@ -12,6 +12,7 @@ export default function Home() {
 
   // UI states for menus / renaming / deleting
   const [openMenu, setOpenMenu] = useState(null); // chat name with open menu
+  const [menuPos, setMenuPos] = useState(null); // { top, left } for fixed-positioned dropdown
   const [renaming, setRenaming] = useState(null); // chat name currently being renamed (shows input)
   const [renameValue, setRenameValue] = useState("");
   const [deleteTarget, setDeleteTarget] = useState(null); // chat name pending delete confirmation
@@ -24,7 +25,8 @@ export default function Home() {
   // small transient click animation marker for menu options
   const [clickedOption, setClickedOption] = useState(null); // e.g. `${name}:rename` or `${name}:delete`
 
-  const listRef = useRef();
+  const sidebarListRef = useRef();
+  const messagesRef = useRef();
   const containerRef = useRef();
 
   // small util
@@ -81,13 +83,14 @@ export default function Home() {
     });
   }, [chats]);
 
-  // Auto-save chats + auto-scroll
+  // Auto-save chats + auto-scroll messages
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("chats", JSON.stringify(chats));
-      if (listRef.current) {
-        listRef.current.scrollTo({
-          top: listRef.current.scrollHeight,
+      // Auto-scroll messages pane (not the sidebar)
+      if (messagesRef.current) {
+        messagesRef.current.scrollTo({
+          top: messagesRef.current.scrollHeight,
           behavior: "smooth",
         });
       }
@@ -205,13 +208,27 @@ export default function Home() {
   // UI helpers
   const toggleMenu = (e, name) => {
     e.stopPropagation();
-    setOpenMenu((prev) => (prev === name ? null : name));
+    // If closing the currently open menu
+    if (openMenu === name) {
+      setOpenMenu(null);
+      setMenuPos(null);
+      return;
+    }
+    // open new menu and capture button position so the menu can be fixed (not clipped by overflow)
+    const rect = e.currentTarget.getBoundingClientRect();
+    // menu width is w-40 (~160px). we'll position the menu so its right edge aligns with button's right edge
+    const menuWidth = 160;
+    const left = Math.max(rect.right - menuWidth, rect.left); // ensure not too far left
+    const top = rect.bottom + 6; // small offset so it sits below the button
+    setMenuPos({ top, left });
+    setOpenMenu(name);
     setRenaming(null);
   };
 
   const startRename = (e, name) => {
     e.stopPropagation();
     setOpenMenu(null);
+    setMenuPos(null);
     setRenaming(name);
     setRenameValue(name);
   };
@@ -263,6 +280,7 @@ export default function Home() {
   const confirmDelete = (e, name) => {
     e.stopPropagation();
     setOpenMenu(null);
+    setMenuPos(null);
     setDeleteTarget(name);
   };
 
@@ -299,6 +317,7 @@ export default function Home() {
     setCurrentChat(name);
     setSidebarOpen(false);
     setOpenMenu(null);
+    setMenuPos(null);
   };
 
   // --- UI ---
@@ -306,7 +325,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex" ref={containerRef}>
       {/* Sidebar */}
       <div
-        className={`fixed z-40 top-0 left-0 h-full w-72 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed z-40 top-0 left-0 h-full w-72 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ${sidebarOpen ? "translate-x-0" : "-translate-x-72"}`}
       >
         {/* floating header area inside sidebar */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-start gap-3">
@@ -337,7 +356,7 @@ export default function Home() {
         <div className="px-3">
           <button
             onClick={createChat}
-            className="w-full mb-3 flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-lg hover:shadow-sm active:scale-95 transition transform"
+            className="w-full mb-3 flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-lg hover:shadow-sm transition-transform active:scale-95"
             title="New chat"
           >
             <svg className="w-4 h-4 text-gray-600 dark:text-gray-200" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden>
@@ -348,7 +367,7 @@ export default function Home() {
         </div>
 
         {/* Chat List */}
-        <div ref={listRef} className="overflow-y-auto h-[calc(100%-10rem)] p-2 space-y-2">
+        <div ref={sidebarListRef} className="overflow-y-auto h-[calc(100%-10rem)] p-2 space-y-2">
           {Object.keys(chats).map((name) => {
             const isCurrent = name === currentChat;
             const displayed = displayNames[name] ?? name;
@@ -450,11 +469,12 @@ export default function Home() {
                     )}
                   </button>
 
-                  {/* Dropdown menu with smooth scale+fade */}
-                  {openMenu === name && (
+                  {/* Dropdown menu rendered as fixed-position to avoid being clipped by the scroll container */}
+                  {openMenu === name && menuPos && (
                     <div
                       onClick={(e) => e.stopPropagation()}
-                      className="absolute right-0 top-12 z-50 w-40 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transform transition duration-150 origin-top-right scale-100"
+                      style={{ position: "fixed", top: menuPos.top, left: menuPos.left, zIndex: 1000 }}
+                      className="z-50 w-40 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transform transition duration-150"
                     >
                       <button
                         onClick={(e) => startRename(e, name)}
@@ -499,7 +519,7 @@ export default function Home() {
 
         {/* Chat Messages */}
         <main className="flex-1 max-w-5xl mx-auto w-full p-4 sm:p-6 flex flex-col pt-24 pb-28">
-          <div ref={listRef} className="flex-1 overflow-y-auto mb-4 space-y-3 scroll-smooth">
+          <div ref={messagesRef} className="flex-1 overflow-y-auto mb-4 space-y-3 scroll-smooth">
             {chats[currentChat]?.map((m, i) => (
               <ChatBubble key={i} m={m} onCopy={() => navigator.clipboard.writeText(m.content)} />
             ))}
@@ -507,7 +527,8 @@ export default function Home() {
         </main>
 
         {/* Chat Input */}
-        <div className="relative z-50">
+        {/* Hide chat input on small screens while sidebar is open so the sidebar doesn't overlap/give a broken look */}
+        <div className={`relative z-50 ${sidebarOpen ? "hidden md:block" : ""}`}>
           <ChatInput onSend={onSend} loading={loading} />
         </div>
 
@@ -520,7 +541,7 @@ export default function Home() {
 
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center">
+        <div className="fixed inset-0 flex items-center justify-center" style={{ zIndex: 9999 }}>
           {/* backdrop */}
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" onClick={cancelDelete} />
           {/* modal */}
