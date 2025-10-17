@@ -335,11 +335,14 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex" ref={containerRef}>
       {/* Sidebar
-          unchanged width (full-sized as before) and sits above chat input when open.
-          Sidebar z-50 so header (z-60) stays visible above it. */}
+          - Full-sized on small screens when open (w-full), fixed width on sm+ (w-72)
+          - Slides in/out with transform based on sidebarOpen
+          - Lower z-index than Header so Header remains visible above it */}
       <div
         ref={sidebarRef}
-        className={`fixed z-50 top-0 left-0 h-full w-72 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ${sidebarOpen ? "translate-x-0" : "-translate-x-72"} relative`}
+        className={`fixed top-0 left-0 h-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } w-full sm:w-72 z-40`}
       >
         {/* floating header area inside sidebar */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-start gap-3">
@@ -354,7 +357,7 @@ export default function Home() {
         <div className="m-3 p-3 rounded-md bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-800 text-sm text-yellow-800 dark:text-yellow-200 flex items-start gap-3">
           <div className="flex-none">
             {/* warning SVG icon (not emoji) */}
-            <svg className="w-5 h-5 text-yellow-700 dark:text-yellow-200" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <svg className="w-5 h-5 text-yellow-700 dark:text-yellow-200" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M12 2L2 20h20L12 2z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M12 9v4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M12 17h.01" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -370,10 +373,10 @@ export default function Home() {
         <div className="px-3">
           <button
             onClick={createChat}
-            className="w-full mb-3 flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-lg hover:shadow-sm transition-transform active:scale-95"
+            className="w-full mb-3 flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100 rounded-lg hover:shadow-sm transition transform active:scale-95"
             title="New chat"
           >
-            <svg className="w-4 h-4 text-gray-600 dark:text-gray-200" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden>
+            <svg className="w-4 h-4 text-gray-600 dark:text-gray-200" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
             New chat
@@ -402,8 +405,12 @@ export default function Home() {
                 onClick={() => onSelectChatRow(name)}
               >
                 {/* avatar / icon */}
-                <div className={`flex-none w-9 h-9 rounded-md flex items-center justify-center text-sm font-medium ${isCurrent ? "bg-gray-200/60 dark:bg-gray-600" : "bg-gray-200/60 dark:bg-gray-700 text-gray-700 dark:text-gray-200"}`}>
-                  <span aria-hidden>💬</span>
+                <div
+                  className={`flex-none w-9 h-9 rounded-md flex items-center justify-center text-sm font-medium ${
+                    isCurrent ? "bg-gray-200/60 dark:bg-gray-600" : "bg-gray-200/60 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                  }`}
+                >
+                  <span aria-hidden="true">💬</span>
                 </div>
 
                 {/* title + preview / or inline rename */}
@@ -446,7 +453,9 @@ export default function Home() {
                         <div className="flex-1">
                           {/* animated display */}
                           <span
-                            className={`block truncate text-sm font-medium transition-all duration-200 ${isCurrent ? "text-gray-900 dark:text-white" : "text-gray-900 dark:text-gray-100"}`}
+                            className={`block truncate text-sm font-medium transition-all duration-200 ${
+                              isCurrent ? "text-gray-900 dark:text-white" : "text-gray-900 dark:text-gray-100"
+                            }`}
                             aria-live="polite"
                           >
                             {displayed}
@@ -470,12 +479,12 @@ export default function Home() {
                     {/* toggle icon: three dots when closed, cross when open */}
                     {openMenu === name ? (
                       // cross icon (SVG)
-                      <svg className="w-4 h-4 text-gray-700 dark:text-gray-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <svg className="w-4 h-4 text-gray-700 dark:text-gray-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M6 6l12 12M6 18L18 6" />
                       </svg>
                     ) : (
                       // three dots icon (SVG)
-                      <svg className="w-4 h-4 text-gray-700 dark:text-gray-200" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                      <svg className="w-4 h-4 text-gray-700 dark:text-gray-200" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <circle cx="5" cy="12" r="1.6" />
                         <circle cx="12" cy="12" r="1.6" />
                         <circle cx="19" cy="12" r="1.6" />
@@ -501,7 +510,7 @@ export default function Home() {
             >
               {/* pencil icon + label */}
               <span className="inline-flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M4 13.5V20h6.5L20.5 9.999l-6.5-6.5L4 13.5z" />
                 </svg>
                 <span>Rename</span>
@@ -513,7 +522,7 @@ export default function Home() {
             >
               {/* trash icon + label */}
               <span className="inline-flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M20 7H4M9 7V4h6v3m1 0l-1 13a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7" />
                 </svg>
                 <span>Delete</span>
@@ -530,7 +539,7 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
         {/* Floating Header (always visible while sidebar is open)
-            removed conditional width so header stays visible and unchanged when the sidebar opens */}
+            Header has higher z-index than sidebar so it remains visible when sidebar is open */}
         <div
           className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-60 transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
         >
