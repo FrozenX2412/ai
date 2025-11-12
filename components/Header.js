@@ -2,6 +2,11 @@ import { useContext } from "react";
 import { ThemeContext } from "../pages/_app";
 
 export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarOpen }) {
+  // Prefer props but fall back to ThemeContext if provided
+  const ctx = useContext(ThemeContext ?? {});
+  const currentTheme = theme ?? ctx?.theme ?? "dark";
+  const toggleTheme = onToggleTheme ?? ctx?.toggleTheme ?? (() => {});
+
   return (
     <header
       className={`fixed top-0 left-1/2 -translate-x-1/2 z-60
@@ -18,25 +23,31 @@ export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarO
         <div className="flex items-center gap-3">
           {/* Hamburger Menu Icon */}
           <button
+            type="button"
             onClick={onToggleSidebar}
-            aria-label="Toggle sidebar"
-            className="flex flex-col justify-center w-8 h-8 gap-[5px] group"
+            aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+            aria-expanded={!!sidebarOpen}
+            className="flex items-center justify-center w-8 h-8 gap-[5px] group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded"
+            title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
           >
             <span
-              className={`h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 ${
+              className={`block h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 transform ${
                 sidebarOpen ? "rotate-45 translate-y-[7px]" : ""
               }`}
-            ></span>
+              aria-hidden="true"
+            />
             <span
-              className={`h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 ${
-                sidebarOpen ? "opacity-0" : "opacity-100"
+              className={`block h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 ${
+                sidebarOpen ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
-            ></span>
+              aria-hidden="true"
+            />
             <span
-              className={`h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 ${
+              className={`block h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 transform ${
                 sidebarOpen ? "-rotate-45 -translate-y-[7px]" : ""
               }`}
-            ></span>
+              aria-hidden="true"
+            />
           </button>
 
           {/* Brand Name */}
@@ -54,11 +65,14 @@ export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarO
         <div className="flex items-center gap-3">
           {/* Theme Toggle */}
           <button
-            onClick={onToggleTheme}
+            type="button"
+            onClick={toggleTheme}
             aria-label="Toggle theme"
+            aria-pressed={currentTheme === "dark"}
             className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full
               transition-all duration-300 bg-gray-200 dark:bg-gray-700
-              hover:scale-110 hover:rotate-[360deg] shadow-md group"
+              hover:scale-105 shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            title="Toggle theme"
           >
             {/* Sun Icon (light mode) */}
             <svg
@@ -68,10 +82,10 @@ export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarO
               strokeWidth={2}
               stroke="currentColor"
               className={`absolute w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 transition-all duration-500 transform ${
-                theme === "light"
-                  ? "opacity-100 scale-100 group-hover:rotate-[360deg]"
-                  : "opacity-0 scale-0"
+                currentTheme === "light" ? "opacity-100 scale-100" : "opacity-0 scale-0"
               }`}
+              aria-hidden={currentTheme !== "light"}
+              focusable="false"
             >
               <path
                 strokeLinecap="round"
@@ -88,10 +102,10 @@ export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarO
               strokeWidth={2}
               stroke="currentColor"
               className={`absolute w-5 h-5 sm:w-6 sm:h-6 text-blue-400 transition-all duration-500 transform ${
-                theme === "dark"
-                  ? "opacity-100 scale-100 group-hover:rotate-[360deg]"
-                  : "opacity-0 scale-0"
+                currentTheme === "dark" ? "opacity-100 scale-100" : "opacity-0 scale-0"
               }`}
+              aria-hidden={currentTheme !== "dark"}
+              focusable="false"
             >
               <path
                 strokeLinecap="round"
