@@ -48,6 +48,20 @@ export default function Home() {
     return () => window.removeEventListener("click", onClick);
   }, []);
 
+  // Close sidebar on Escape
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === "Escape") {
+        setSidebarOpen(false);
+        setOpenMenu(null);
+        setRenaming(null);
+        setMenuPos(null);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   // Load chats & theme from localStorage
   useEffect(() => {
     try {
@@ -365,7 +379,26 @@ export default function Home() {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } w-1/2 sm:w-72 z-50`}
         aria-hidden={!sidebarOpen}
+        onClick={(e) => {
+          // Prevent clicks inside sidebar from closing via backdrop; let the backdrop handle outside clicks.
+          e.stopPropagation();
+        }}
       >
+        {/* Close (X) button inside sidebar */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setSidebarOpen(false);
+          }}
+          aria-label="Close sidebar"
+          className="absolute top-3 right-3 z-60 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+        >
+          <svg className="w-4 h-4 text-gray-700 dark:text-gray-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M6 6l12 12M6 18L18 6" />
+          </svg>
+        </button>
+
         {/* floating header area inside sidebar */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-start gap-3">
           <div className="flex-1">
@@ -560,6 +593,15 @@ export default function Home() {
           <div className="text-xs text-gray-500 dark:text-gray-400 text-center">Made by <span className="font-semibold text-indigo-500">TUSHAR</span></div>
         </div>
       </div>
+
+      {/* Backdrop: when sidebar is open, clicking this will close it */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 z-40 sm:hidden"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
