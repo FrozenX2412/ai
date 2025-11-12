@@ -2,16 +2,14 @@ import { useContext } from "react";
 import { ThemeContext } from "../pages/_app";
 
 export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarOpen }) {
-  // Prefer props but fall back to ThemeContext if provided
   const ctx = useContext(ThemeContext ?? {});
   const currentTheme = theme ?? ctx?.theme ?? "dark";
   const toggleTheme = onToggleTheme ?? ctx?.toggleTheme ?? (() => {});
 
   return (
     <header
-      className={`fixed top-0 left-1/2 -translate-x-1/2 z-60
-        max-w-6xl
-        w-full mx-auto
+      className={`fixed top-0 left-1/2 -translate-x-1/2 z-[70]
+        max-w-6xl w-full mx-auto
         border border-gray-200/40 dark:border-gray-800/40
         bg-white/60 dark:bg-gray-900/60
         backdrop-blur-[50px] backdrop-saturate-200
@@ -21,33 +19,20 @@ export default function Header({ onToggleTheme, theme, onToggleSidebar, sidebarO
       <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         {/* Left Section: Menu + Title */}
         <div className="flex items-center gap-3">
-          {/* Hamburger Menu Icon */}
+          {/* Hamburger Menu Icon (always 3 lines, not tick mark) */}
           <button
             type="button"
             onClick={onToggleSidebar}
             aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
             aria-expanded={!!sidebarOpen}
-            className="flex items-center justify-center w-8 h-8 gap-[5px] group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded"
+            className="relative flex flex-col justify-center items-center w-8 h-8 gap-[5px]
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded
+              transition-all duration-300 z-[80]" // higher z so visible above sidebar
             title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
           >
-            <span
-              className={`block h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 transform ${
-                sidebarOpen ? "rotate-45 translate-y-[7px]" : ""
-              }`}
-              aria-hidden="true"
-            />
-            <span
-              className={`block h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 ${
-                sidebarOpen ? "opacity-0 pointer-events-none" : "opacity-100"
-              }`}
-              aria-hidden="true"
-            />
-            <span
-              className={`block h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300 transform ${
-                sidebarOpen ? "-rotate-45 -translate-y-[7px]" : ""
-              }`}
-              aria-hidden="true"
-            />
+            <span className="block h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300" />
+            <span className="block h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300" />
+            <span className="block h-[2px] w-6 bg-gray-800 dark:bg-gray-200 rounded transition-all duration-300" />
           </button>
 
           {/* Brand Name */}
