@@ -276,6 +276,7 @@ export default function Home() {
     setMenuPos(null);
     setRenaming(name);
     setRenameValue(name);
+    // move focus to input after a tick (handled by autoFocus on input)
   };
 
   const saveRename = async (oldName) => {
@@ -374,16 +375,16 @@ export default function Home() {
       {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className={`fixed top-0 left-0 h-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } w-1/2 sm:w-72 z-50`}
+        className={`fixed top-0 left-0 h-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-r border-gray-200 dark:border-gray-700 transform transition-transform duration-500 ease-in-out ${
+          sidebarOpen ? "translate-x-0 z-[9999]" : "-translate-x-full z-50"
+        } w-1/2 sm:w-72`}
         aria-hidden={!sidebarOpen}
         onClick={(e) => {
           // Prevent clicks inside sidebar from closing via backdrop; let the backdrop handle outside clicks.
           e.stopPropagation();
         }}
       >
-        {/* Close (X) button inside sidebar */}
+        {/* Close (X) button inside sidebar - very high z so visible above everything in the sidebar */}
         <button
           type="button"
           onClick={(e) => {
@@ -391,7 +392,7 @@ export default function Home() {
             setSidebarOpen(false);
           }}
           aria-label="Close sidebar"
-          className="absolute top-3 right-3 z-60 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+          className="absolute top-3 right-3 z-[10001] p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
         >
           <svg className="w-4 h-4 text-gray-700 dark:text-gray-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M6 6l12 12M6 18L18 6" />
@@ -444,8 +445,6 @@ export default function Home() {
               chats[name] && chats[name].length
                 ? chats[name][chats[name].length - 1].content
                 : "";
-            const optionKeyRename = `${name}:rename`;
-            const optionKeyDelete = `${name}:delete`;
             return (
               <div
                 key={name}
@@ -596,7 +595,7 @@ export default function Home() {
       {/* Backdrop: when sidebar is open, clicking this will close it */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/20 z-40 sm:hidden"
+          className="fixed inset-0 bg-black/20 z-90 sm:hidden"
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         />
@@ -604,9 +603,9 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
-        {/* Floating Header — made opaque and higher z so messages never overlap */}
+        {/* Floating Header — opaque and above messages but below sidebar */}
         <div
-          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-[90] transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
+          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-60 transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
           style={{ pointerEvents: "auto" }}
         >
           {/* Opaque background so header is not transparent */}
