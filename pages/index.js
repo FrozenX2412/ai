@@ -276,7 +276,6 @@ export default function Home() {
     setMenuPos(null);
     setRenaming(name);
     setRenameValue(name);
-    // move focus to input after a tick (handled by autoFocus on input)
   };
 
   const saveRename = async (oldName) => {
@@ -605,12 +604,13 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative">
-        {/* Floating Header */}
+        {/* Floating Header — made opaque and higher z so messages never overlap */}
         <div
-          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-60 transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
+          className={`fixed top-3 left-1/2 transform -translate-x-1/2 z-[90] transition-all duration-500 w-[95%] sm:w-[90%] md:w-[85%]`}
           style={{ pointerEvents: "auto" }}
         >
-          <div className="backdrop-blur-xl bg-white/60 dark:bg-gray-800/60 rounded-2xl shadow-lg border border-gray-200/20 dark:border-gray-700/30">
+          {/* Opaque background so header is not transparent */}
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-200/10 dark:border-gray-700/30">
             <Header
               onToggleTheme={onToggleTheme}
               theme={theme}
@@ -620,8 +620,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Chat Messages */}
-        <main className="flex-1 max-w-5xl mx-auto w-full p-4 sm:p-6 flex flex-col pt-24 pb-0">
+        {/* Chat Messages
+            IMPORTANT: reserve vertical space for the fixed header with pt-28 (so messages begin below it) */}
+        <main className="flex-1 max-w-5xl mx-auto w-full p-4 sm:p-6 flex flex-col pt-28 pb-0">
           <div
             ref={messagesRef}
             className="flex-1 overflow-y-auto mb-4 space-y-3 scroll-smooth pb-36"
